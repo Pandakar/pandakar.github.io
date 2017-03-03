@@ -1,64 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-<title>
-  Pandakar | CSC466 Project Page
-</title>
-</head>
-<body>
-<h1> CSC 466 Project Page </h1>
+---
+layout: default
+title: CSC 466 | Project Proposal
+---
+<div class="proposal">
+  <h2> Analyzing Network Traffic of Online Fighting Games </h2>
+  <h4> Project by: Myan Panikkar </h4>
 
+  A PDF copy of the original proposal can be found <a href='466-ProjectProposal.pdf'> here. </a>
 
+  <p>
+  Most video games featuring multiplayer modes have moved from local multiplayer setups to
+  online multiplayer setups. In a local setting the performance of the game was only reliant on the
+  game itself but over the Internet multiplayer games face several network-reliant performance
+  issues. Players in these multiplayer games, such as Starcraft or League of Legends, want
+  connections that are both fast and stable. Since games in different genres have different
+  constraints on the number of players and game duration, our focus will be limited to the genre of
+  fighting action games. These games, such as Street Fighter or Marvel vs. Capcom, are played
+  as 1v1 setups and can be conducted as peer-to-peer sessions. Games in this genre also
+  require fast and stable setups, as games can be won off minor differences in input frames.
+  </p>
 
-<p>
-  Link to project proposal: <a href='proposal.html'>here.</a> An older PDF version is also available <a href='466-ProjectProposal.pdf'> here. </a>
-</p>
-<h2> Current Progress </h2>
-<ul>
-  <li> Identified prior relevant research to review and include in project </li>
-  <ol>
-    <!-- [1] --><li>K.  Raaen, R.  Eg and C.  Griwodz, "Can Gamers Detect Cloud Delay?", in NetGames '14, Nagoya, Japan, 2014, p. 3.</li>
-    <!-- [2]--><li>C.  Lee, "The revolution of StarCraft network traffic", in NetGames '12, 2012.</li>
-    <!-- [3]--><li>P.  Emmerich, D.  Raumer, F.  Wohlfart and G.  Carle, "A Study of Network Stack Latency for Game Servers", in NetGames '14, Nagoya, Japan, 2014, p. 6.</li>
-    <!-- [4]--><li>H.  Lin, C.  Wang and H.  Wei, "Improving Online Game Performance over IEEE 802.11N Networks", in NetGames '10, Taipei, Taiwan, 2010, p. 2.</li>
-  </ol>
-  <li> Identified middleware to conduct analyses on:</li>
-  <ol>
-    <li> GGPO </li>
-    <li> <a href="http://www.fightcade.com/"> FightCade </a> </li>
-  </ol>
+  <p>
+  There have been efforts put in by the gaming community to introduce middleware that attempts
+  to improve the reliability of fighting action games. Currently there are two such middleware
+  platforms: GGPO and FightCade. There has also been research conducted and presented
+  through the annual NetGames conference, but this conference has not presented any papers on
+  fighting action games in particular. Papers have been presented on detecting and reducing lag
+  as well as analyses of similar video game genres, but few exist for fighting action games.
+  </p>
 
-  <li> Acquired second computer for capturing packets off LAN </li>
-</ul>
+  <p>
+  This project aims to give a technical breakdown of how middleware such as GGPO and
+  FightCade improves the network performance and/or reliability of fighting action games.
+  Furthermore, this project also aims to compare the network performance of fighting action
+  games that use middleware like GGPO with fighting action games that do not use middleware.
+  These comparisons would be conducted through packet captures from which various statistics
+  (such as RTT and drop rate) would be computed over the duration of gaming sessions.
+  </p>
+</div><!-- /.proposal -->
 
-Since GGPO's site has been offline since it was first visited, analysis of middleware will be conducted entirely from FightCade.
-<h2> Estimated Weekly Schedule </h2>
-
-<table>
-  <tr>
-    <th> Deliverable </th> <th> Estimated Completion Date </th>
-  </tr>
-  <tr>
-    <td> Prior works and FightCade analyzed </td> <td> March 3</td>
-  </tr>
-  <tr>
-    <td> Project Site Updated to use Jekyll for Markdown formatting </td> <td> March 3 </td>
-  </tr>
-  <tr>
-    <td> Packet Captures from Street Fighter V completed </td> <td> March 10 </td>
-  </tr>
-  <tr>
-    <td> Packet Captures from Skullgirls completed </td> <td> March 10 </td>
-  </tr>
-  <tr>
-    <td> Packet Captures from Skullgirls analyzed</td> <td> March 17 </td>
-  </tr>
-  <tr>
-    <td> Packet Captures from Street Fighter V analyzed </td> <td> March 24 </td>
-  </tr>
-  <tr>
-    <td> Report Draft made available online </td> <td> March 31 </td>
-  </tr>
-</table>
-</body>
-</html>
+<div class="methodology">
+  <p>
+    Two games will be used for conducting analyses: Skullgirls and Street Fighter V.
+    For each game, three phases of packet capture will be undertaken:
+    <ol>
+      <li> Gameplay in a LAN setting for setting a best-case scenario </li>
+      <li> Gameplay over the Internet with known peers and minimal network impact, to set an average case scenario </li>
+      <li> Gameplay over the Internet with unknown peers under regular network usage</li>
+    </ol>
+    Three to five packet captures will be taken for each step, depending on the length of each match and the quality of packets available.
+    Videos of sessions may also be made available alongside packet captures if desired.
+  </p>
+</div><!-- /.methodology -->

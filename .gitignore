@@ -5,6 +5,8 @@ ehthumbs.db
 # Folder config file
 Desktop.ini
 
+# Jekyll config information
+_site/
 # Recycle Bin used on file shares
 $RECYCLE.BIN/
 
