@@ -4,7 +4,63 @@ title: CSC 466 | Relevant Research
 ---
 
 <div class="research">
+  <h1> A Study of Network Stack Latency for Game Servers </h1>
+  <h4> P.  Emmerich, D.  Raumer, F.  Wohlfart and G.  Carle, "A Study of Network Stack Latency for Game Servers", in NetGames '14, Nagoya, Japan, 2014, p. 6.</h4>
   <p>
-  Small summaries will be posted here as they are written up/formalized.
+  This paper outlines what steps a server-client model for gaming servers should
+  take to reduce the latency of their games. Emmerich et. al. note that the
+  biggest share of delay often comes from the network between the server and
+  the player and that this delay is often within tens of milliseconds. If a developer
+  uses the regular network stack available from their OS, the delay can shoot
+  into the hundreds of milliseconds.
   </p>
+
+  <p>
+  Emmerich et. al. demonstrate that the following practices can result in
+  additional, undesired latency:
+  <ul>
+    <li>excessive usage of buffers can cause unintended delay</li>
+    <li>deploying a game server on a VM</li>
+    <li>using standard Linux network stack, as it requires multiple expensive
+        system calls to achieve a state update </li>
+  </ul>
+  </p>
+
+  <h1> Can gamers detect cloud delay? </h1>
+  <h4> K.  Raaen, R.  Eg and C.  Griwodz, "Can Gamers Detect Cloud Delay?", in NetGames '14, Nagoya, Japan, 2014, p. 3. </h4>
+  <p>
+    The main goal of this paper was to empirically establish thresholds for
+    detectable motor-visual delay in gaming. Prior studies were conducted
+    as highly controlled tests; as a result it was hard to find a general
+    case as we would want for gaming. Kjetil et. al. found that by designing
+    an experiment where the test subject could adjust their motor-visual delay
+    until it was no longer detectable, the mean range settled on was between
+    50-91ms. They also found a single test subject could discern differences up
+    to 24ms, which shows that outside of the most performant players of any game
+    developers need only aim for latencies near that 50ms mark.
+  </p>
+
+  <h1> The Revolution of StarCraft Network Traffic </h1>
+  <h4> C.  Lee, "The revolution of StarCraft network traffic", in NetGames '12, 2012. </h4>
+  <p>
+    In this paper the author sought to use prior research on StarCraft's
+    usage of network traffic alongside captured packets of StarCraft II, its
+    sequel, to highlight the changes in network traffic in the RTS genre of games.
+
+    RTS games, or Real-Time Strategy games, involve two to eight players in a
+    match where each player creates and micromanages an army to take down
+    the opposing player's base. These games, like fighting games, require lower
+    latencies as the smallest of errors can result in a lost army and hence a lost
+    game. In this paper Lee found that while the original StarCraft, released in 1998,
+    used a peer-to-peer architecture for its network traffic its successor in Starcraft II
+    transitioned to a server-client model to handle traffic.
+
+    The game communicates with Battle.net servers in the background using both
+    TCP and UDP, but when the game is in progress only UDP packets are sent
+    between players and their respective server. They also found that StarCraft's
+    original peer-to-peer model utilized more outgoing bandwidth as the number
+    of players in the game increased whereas with StarCraft II's server-client
+    model the outgoing bandwidth from any individual player was constant.
+  </p>
+
 </div>
