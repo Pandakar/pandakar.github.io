@@ -19,7 +19,7 @@ title: CSC 466 | Project Proposal
   <ul>
     <li> Middleware sits at the network layer </li>
      <ul>
-       <li> Previously linked GitHub repository (<a href="https://github.com/doctorguile/pyqtggpo">here</a>) only has code pertaining to GUI </li>
+       <li> Previously linked GitHub repository (<a href="https://github.com/doctorguile/pyqtggpo" target="_blank">here</a>) only has code pertaining to GUI </li>
        <li> Middleware functionality relies on the "ggpo-build-030.zip" file originally availble off ggpo.net</li>
        <li> At time of writing, build was unavailable due to site revamp - had to grab from a 3rd party file rehost </li>
      </ul>
@@ -103,11 +103,12 @@ title: CSC 466 | Project Proposal
     </ul>
   </ul>
 
-  <h4>Using Clumsy to Force Unfavorable Latency</h4>
+  <h3>Using Clumsy to Force Unfavorable Latency</h3>
 
   <p>
     Clumsy is an open-source tool that uses the WinDivert library to interact with packets.
-    Clumsy can be found <a href="https://jagt.github.io/clumsy/"> here </a>.
+    Clumsy can be found <a href="https://jagt.github.io/clumsy/" target="_blank">here</a>.
+    <img src="https://jagt.github.io/clumsy/clumsy-demo.gif" alt="Clusmy in action" />
     Amongst other features, this software can perform the following functions on Windows systems:
     <ul>
       <li>forcing lag</li>
@@ -120,29 +121,29 @@ title: CSC 466 | Project Proposal
     To force additional latency and controlled packet loss during gameplay, Clumsy was used.
   </p>
 
-  <h4> Analysis on Skullgirls </h4>
+  <h3> Analysis on Skullgirls </h3>
 
   <ul>
     <li>solely uses peer-to-peer for online play</li>
     <li>uses GGPO to assist in netplay</li>
     <li>in lobbies with repeated matches, host of match is alternated</li>
     <li>Tests were conducted with a peer in Australia to see how much stress GGPO could handle</li>
-    <li>Tests with notable results:</li>
+    <li>Tests with notable results below</li>
     <!-- insert video links here -->
     <ol>
-      <li><a href="https://www.youtube.com">223ms, frame_delay=8,8; game felt "smooth"</a></li>
-      <li><a href="https://www.youtube.com">243ms, frame_delay=0,0; longer load times</a></li>
-      <li><a href="https://www.youtube.com">380ms, frame_delay=8,0; longer load times and match ending sound is duplicated at end</a></li>
+      <li><a href="https://www.youtube.com/watch?v=92_V-KW-DW8" target="_blank">223ms, frame_delay=8,8; game felt "smooth"</a></li>
+      <li><a href="https://www.youtube.com/watch?v=w2IBQg-RInk" target="_blank">243ms, frame_delay=0,0; longer load times</a></li>
+      <li><a href="https://www.youtube.com/watch?v=7fbcgZsshkY" target="_blank">380ms, frame_delay=8,0; longer load times and match ending sound is duplicated at end</a></li>
       <ul>
-        <li><a href="https://www.youtube.com">Match end discrepancy mentioned above</a></li>
+        <li><a href="https://www.youtube.com/watch?v=6msDsCVpnbs" target="_blank">Match end discrepancy mentioned above</a></li>
       </ul>
-      <li><a href="https://www.youtube.com">400ms, frame_delay=0,0; lots of frame skipping and sound duplication</a></li>
-      <li><a href="https://www.youtube.com">223ms, frame_delay=0,0; packet loss of 20% forced on my end, result is "my" character being unresponsive</a></li>
-      <li><a href="https://www.youtube.com">320ms, frame_delay=5,0; game is smoother but slow-paced with infrequent input drops</a></li>
+      <li><a href="https://www.youtube.com/watch?v=cFtmsgHmNpo" target="_blank">400ms, frame_delay=0,0; lots of frame skipping and sound duplication</a></li>
+      <li><a href="https://www.youtube.com/watch?v=MJy8tZn7qMo" target="_blank">223ms, frame_delay=0,0; packet loss of 20% forced on my end, result is "my" character being unresponsive</a></li>
+      <li><a href="https://www.youtube.com/watch?v=59EbeD4_ml4" target="_blank">320ms, frame_delay=5,0; game is smoother but slow-paced with infrequent input drops</a></li>
     </ol>
   </ul>
 
-  <h4> Analysis on Street Fighter V </h4>
+  <h3> Analysis on Street Fighter V </h3>
 
   <ul>
     <li>on startup, following servers sent to Steam client as JSON message</li>
