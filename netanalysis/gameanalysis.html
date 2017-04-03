@@ -104,12 +104,62 @@ title: Game Analysis
       <li>"File": {"DNS": "fdlcdn.prod.capcomfighters.net","Port": "80"}</li>
       <li>"Proud": {"DNS": "209.58.132.134","Port": "30850"}</li>
     </ul>
-    Capcom
+    Of note is that the "game" server they have set up on port 80. This demonstrates that Street Fighter V may use a server/client model for some of their online play.
+    Tests were inconclusive on this front as only lobby play was tested, from which the majority of traffic was UDP traffic.
+    However, from packets alone we were unable to discern whether this was peer-to-peer traffic or a server/client model.
+    The above JSON response suggests that there are game intermediary servers being used, but in our lobby play the UDP traffic was exchanged directly between peers.
+    Although this makes the comparison to games with GGPO unfair (one uses an authority server and one does not) the findings from games played are still relatively interesting.
   </p>
 
-    <li>uses combination of server/client for authentication and peer-to-peer for lobby play</li>
-    <li>while sitting in lobby, dgrams sent back and forth between lobby players with following format:</li>
-    <!-- image of wireshark here -->
-    <li>while sitting in lobby, heatmap in background being periodically updated from fileserver through plaintext HTTP requests</li>
+  <h4>Game Setup and Idling</h4>
+  <p>
+    Street Fighter V uses a combination of server/client architecture alongside peer-to-peer in lobby play.
+    For authentication purposes, Capcom uses a network they call the Capcom Fighter Network (CFN).
+    Players that wish to participate in online play register their desired username and country.
+    This lets players mark "favorite" players that they can send quick lobby requests to, and allows for searching of players using various criteria.
+    The CFN player list is infrequently updated - while unsure on the exact refresh period, the playing partner selected for tests was unable to find my CFN ID when searched for.
+    However, no restrictions were on the new player for searching for players and inviting players to lobbies.
+    Since gameplay was conducted over the course of an hour, this suggests the list of players registered in Capcom's Fighter Network could be refreshed only once or twice per day.
+  </p>
+
+  <p>
+    To keep consistent with the Skullgirls tests, only lobby play was tested.
+    The game also offers matched casual play and matched rank play.
+    While idling in the game (whether in a lobby or on the main menu) the following heatmap can be seen in the background.
+  </p>
+  ![heatmap]({{ site.url }}/assets/heatmap.png)
+
+  <p>
+    This heatmap is periodically updated from Capcom's fileserver through the following HTTP request:
+  </p>
+
+  ![heatmap request]({{ site.url }}/assets/heatmap_request.png)
+
+  <p>
+    While sitting in the lobby with a peer, the following datagrams are sent back and forth directly between peers.
+  </p>
+
+  ![lobby datagrams]({{ site.url }}/assets/lobby_dgrams_sf5.png)
+
+  <h4> Videos from Games </h4>
+
+  <p>
+   The following videos highlight some of the difficulties encountered when analyzing Street Fighter V's gameplay.
+   All videos were conducted with a peer in Seattle, minimizing the distance between players.
+   Unfortunately audio was not captured during testing, but any latency/packet loss issues are noticeable without audio.
+  </p>
+
+  <ul>
+    <li><a href="https://www.youtube.com/watch?v=jNsXc2sbEMQ" target="_blank">First game played.</a>This game was conducted with minimal background traffic and appears to be smooth.</li>
+    <li><a href="https://www.youtube.com/watch?v=GlbMpVna9Wk" target="_blank">Second game played.</a>This game was conducted while in a Discord server with the opposing player. The packet drop rate was highly noticeable starting from the menus.</li>
+    <li><a href="https://www.youtube.com/watch?v=X17rjWT8pTE" target="_blank">Third game played.</a>Same conditions as previous game, packet drops were still noticeable but not as severe as the previous match.</li>
   </ul>
+
+  <p>
+    The unreliable gameplay seen in the last two clips may have been a result of a variety of factors.
+    We were unable to test many of our initial thoughts on fixes, as the Capcom Fighter Network had not updated with my ID yet.
+    This prevented us from switching lobby hosts to see if we could "restart" from a more reliable point.
+    Furthermore, as seen from the heatmap above there was "noisy" traffic occuring in the background of the game by default.
+  </p>
+
 </div><!-- /.game-analysis -->

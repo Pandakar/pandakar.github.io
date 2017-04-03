@@ -6,7 +6,7 @@ title: GGPO Analysis
 
   <h2> Analysis on GGPO Middleware </h2>
   <p>
-    GGPO, short for "Good Game, Well Played" is a middleware suite designed with fighting games in mind.
+    GGPO, short for "Good Game, Peace Out" is a middleware suite designed with fighting games in mind.
     It was developed by Tony Cannon, a member of the Shoryuken online fighting community.
     The functional part of this middleware (where the magic happens) is closed source, but the section of code pertaining to the GUI for its client
     can be found at <a href="https://github.com/doctorguile/pyqtggpo" target="_blank">this GitHub repository.</a>
@@ -32,8 +32,18 @@ title: GGPO Analysis
     A frame delay of 0 would let the game behave as normal, where the max possible delay of 8 means both clients have any inputs delayed by 8 frames before being processed.
     From preliminary tests, the middleware selects the higher of the two frame delays. So if one client selects 0 frame delay and the other selects 5 frames of delay, the game proceeds with 5 frames of delay.
     This means the games are still subject to latency, packet loss and other network issues but the overall experience can still feel smoother than a game just randomly dropping inputs.
+  </p>
 
-    A more concise explanation of how GGPO functions with respect to frame delay can be found from <a href='http://skullgirls.com/2011/09/skullgirls-ggpo-and-you/' target="_blank">this blog post. </a>
+  <p>
+    From here, the game uses a process called speculative execution to try and eliminate perceived input delay.
+    Tony Cannon explains how this process works in <a href="http://www.gamasutra.com/view/news/177508/The_lagfighting_techniques_behind_GGPOs_netcode.php" target="_blank">this interview</a> with writers at Gamasutra.
+    The main idea is that in combination with the frame delay set previously by players, the GGPO middleware predicts inputs before they occur based on previous actions.
+    When inputs are actually received, they are compared to the predicted inputs.
+    If any discrepancies occur, the middleware "rolls back" its simulation to the first incorrect frame and corrects using the received inputs.
+  </p>
+
+    Another explanation on how GGPO functions with respect to frame delay can be found from
+    <a href='http://skullgirls.com/2011/09/skullgirls-ggpo-and-you/' target="_blank">this blog post</a> written by a developer of Skullgirls. 
   </p>
   <p>
     One very important side effect of using this middleware is that <em> games using this middleware must use a peer-to-peer architecture</em>.
