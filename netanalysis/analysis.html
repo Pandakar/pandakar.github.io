@@ -14,11 +14,12 @@ title: CSC 466 | Project Proposal
     The GGPO middleware is an attempted solution at providing a smoother online experience for peer-to-peer fighting games.
     This section goes over two parts: how the middleware is structured and analysis of its decompiled DLLs.
   </p>
-  <h4> Structure of GGPO Middleware </h4>
+  <h3> Structure of GGPO Middleware </h3>
+
   <ul>
     <li> Middleware sits at the network layer </li>
      <ul>
-       <li> Previously linked GitHub repository (<a href=""> here</a>) only has code pertaining to GUI </li>
+       <li> Previously linked GitHub repository (<a href="https://github.com/doctorguile/pyqtggpo">here</a>) only has code pertaining to GUI </li>
        <li> Middleware functionality relies on the "ggpo-build-030.zip" file originally availble off ggpo.net</li>
        <li> At time of writing, build was unavailable due to site revamp - had to grab from a 3rd party file rehost </li>
      </ul>
@@ -129,12 +130,15 @@ title: CSC 466 | Project Proposal
     <li>Tests with notable results:</li>
     <!-- insert video links here -->
     <ol>
-      <li>[223ms, frame_delay=8,8; game felt "smooth"](https://www.youtube.com)</li>
-      <li>243ms, frame_delay=0,0; longer load times</li>
-      <li>380ms, frame_delay=8,0; longer load times and match ending sound is duplicated at end</li>
-      <li>400ms, frame_delay=0,0; lots of frame skipping</li>
-      <li>223ms, frame_delay=0,0; packet loss of 20% forced on my end, result is "my" character being unresponsive</li>
-      <li>320ms, frame_delay=5,0; game is smoother but slow-paced with infrequent input drops </li>
+      <li><a href="https://www.youtube.com">223ms, frame_delay=8,8; game felt "smooth"</a></li>
+      <li><a href="https://www.youtube.com">243ms, frame_delay=0,0; longer load times</a></li>
+      <li><a href="https://www.youtube.com">380ms, frame_delay=8,0; longer load times and match ending sound is duplicated at end</a></li>
+      <ul>
+        <li><a href="https://www.youtube.com">Match end discrepancy mentioned above</a></li>
+      </ul>
+      <li><a href="https://www.youtube.com">400ms, frame_delay=0,0; lots of frame skipping and sound duplication</a></li>
+      <li><a href="https://www.youtube.com">223ms, frame_delay=0,0; packet loss of 20% forced on my end, result is "my" character being unresponsive</a></li>
+      <li><a href="https://www.youtube.com">320ms, frame_delay=5,0; game is smoother but slow-paced with infrequent input drops</a></li>
     </ol>
   </ul>
 
