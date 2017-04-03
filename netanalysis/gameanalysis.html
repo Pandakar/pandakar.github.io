@@ -25,15 +25,6 @@ title: Game Analysis
   </p>
     <img src="https://jagt.github.io/clumsy/clumsy-demo.gif" alt="Clusmy in action" />
   <p>
-    Amongst other features, this software can perform the following functions on Windows systems:
-    <ul>
-      <li>forcing lag</li>
-      <li>dropping packets</li>
-      <li>throttling connections</li>
-      <li>duplicating packets</li>
-      <li>sending packets out-of-order</li>
-      <li>tampering with checksums</li>
-    </ul>
     The primary features used in the following tests were forcing lag and dropping packets. Attempting to use the other features resulted in undesired game crashes.
   </p>
   <p>
@@ -43,7 +34,7 @@ title: Game Analysis
   </p>
 
   <h3> Analysis on Skullgirls </h3>
-
+  <img src="/assets/skullgirls_logo.png">
   <p>
     Skullgirls uses peer-to-peer for all of its netplay functionality and uses UDP to transmit all packets.
     This is partially due to the usage of the GGPO middleware for part of its network stack.
@@ -87,7 +78,7 @@ title: Game Analysis
 
 
   <h3> Analysis on Street Fighter V </h3>
-
+  <img src="/assets/sf5_logo.png">
   <p>
     Attempts at analysing Street Fighter V's traffic were not as successful.
     Information regarding Street Fighter V's server setup were gathered but analysis from the actual matches is unreliable.
