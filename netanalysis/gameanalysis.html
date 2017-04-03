@@ -1,64 +1,115 @@
 ---
 layout: default
-title: CSC 466 | Game Analysis
+title: Game Analysis
 ---
-<h3>Using Clumsy to Force Unfavorable Latency</h3>
+<div class="game-analysis">
+<h2> Game Architecture and Packet Analysis </h2>
+  <p>
+    This page contains links to videos and packet captures from their respective games.
+    While the overall results of these comparison experiments are inconclusive,
+    observing how various fighting games tackle their netplay architecture is still an interesting endeavour.
+  </p>
 
-<p>
-  Clumsy is an open-source tool that uses the WinDivert library to interact with packets.
-  Clumsy can be found <a href="https://jagt.github.io/clumsy/" target="_blank">here</a>.
-  A demo of Clumsy's interface can be seen in the following GIF.
-</p>
-  <img src="https://jagt.github.io/clumsy/clumsy-demo.gif" alt="Clusmy in action" />
-<p>
-  Amongst other features, this software can perform the following functions on Windows systems:
-  <ul>
-    <li>forcing lag</li>
-    <li>dropping packets</li>
-    <li>throttling connections</li>
-    <li>duplicating packets</li>
-    <li>sending packets out-of-order</li>
-    <li>tampering with checksums</li>
-  </ul>
-  To force additional latency and controlled packet loss during gameplay, Clumsy was used.
-</p>
+  <p>
+    Videos were captured using <a href="https://obsproject.com/" target="_blank">Open Broadcasting Software.</a>
+    The packets used for analysis were captured using <a href="https://www.wireshark.org/" target="_blank">Wireshark.</a>
+    To force unfavorable latency where normally unavailable, the tool Clumsy was used.
+  </p>
 
-<h3> Analysis on Skullgirls </h3>
+  <h3>Using Clumsy to Force Unfavorable Latency</h3>
 
-<ul>
-  <li>solely uses peer-to-peer for online play</li>
-  <li>uses GGPO to assist in netplay</li>
-  <li>in lobbies with repeated matches, host of match is alternated</li>
-  <li>Tests were conducted with a peer in Australia to see how much stress GGPO could handle</li>
-  <li>Tests with notable results below</li>
-  <!-- insert video links here -->
-  <ol>
-    <li><a href="https://www.youtube.com/watch?v=92_V-KW-DW8" target="_blank">223ms, frame_delay=8,8; game felt "smooth"</a></li>
-    <li><a href="https://www.youtube.com/watch?v=w2IBQg-RInk" target="_blank">243ms, frame_delay=0,0; longer load times</a></li>
-    <li><a href="https://www.youtube.com/watch?v=7fbcgZsshkY" target="_blank">380ms, frame_delay=8,0; longer load times and match ending sound is duplicated at end</a></li>
+  <p>
+    Clumsy is an open-source tool that uses the WinDivert library to interact with packets.
+    Clumsy can be found <a href="https://jagt.github.io/clumsy/" target="_blank">here</a>.
+    A demo of Clumsy's interface can be seen in the following GIF.
+  </p>
+    <img src="https://jagt.github.io/clumsy/clumsy-demo.gif" alt="Clusmy in action" />
+  <p>
+    Amongst other features, this software can perform the following functions on Windows systems:
     <ul>
-      <li><a href="https://www.youtube.com/watch?v=6msDsCVpnbs" target="_blank">Match end discrepancy mentioned above</a></li>
+      <li>forcing lag</li>
+      <li>dropping packets</li>
+      <li>throttling connections</li>
+      <li>duplicating packets</li>
+      <li>sending packets out-of-order</li>
+      <li>tampering with checksums</li>
     </ul>
-    <li><a href="https://www.youtube.com/watch?v=cFtmsgHmNpo" target="_blank">400ms, frame_delay=0,0; lots of frame skipping and sound duplication</a></li>
-    <li><a href="https://www.youtube.com/watch?v=MJy8tZn7qMo" target="_blank">223ms, frame_delay=0,0; packet loss of 20% forced on my end, result is "my" character being unresponsive</a></li>
-    <li><a href="https://www.youtube.com/watch?v=59EbeD4_ml4" target="_blank">320ms, frame_delay=5,0; game is smoother but slow-paced with infrequent input drops</a></li>
-  </ol>
-</ul>
+    The primary features used in the following tests were forcing lag and dropping packets. Attempting to use the other features resulted in undesired game crashes.
+  </p>
+  <p>
+    Equivalents of Clumsy are readily available for other operating systems as well.
+    For similar functionality in OSX, you would want to use <a href="http://nshipster.com/network-link-conditioner/" target="_blank">Network Link Conditioner.</a>
+    For Linux, <a href="https://wiki.linuxfoundation.org/networking/netem" target="_blank">netem</a> would be the tool of choice.
+  </p>
 
-<h3> Analysis on Street Fighter V </h3>
+  <h3> Analysis on Skullgirls </h3>
 
-<ul>
-  <li>on startup, following servers sent to Steam client as JSON message</li>
+  <p>
+    Skullgirls uses peer-to-peer for all of its netplay functionality and uses UDP to transmit all packets.
+    This is partially due to the usage of the GGPO middleware for part of its network stack.
+    When playing online, players can participate using Tournament Mode, Local Only (for LAN tournaments/games), Quick Match (random matches against other online players) or Lobby Play.
+    For the purposes of this project, Lobby Play was setup with a peer in Australia for stress testing Skullgirls' usage of GGPO.
+  </p>
+
+  <h4> Packet Capture Analysis </h4>
+
+  <p>
   <ul>
-    <li>"Game": {"DNS": "api.prod.capcomfighters.net", "Port": "80"}</li>
-    <li>"STUN1": {"DNS": "stun1.prod.capcomfighters.net", "Port": "23478"}</li>
-    <li>"STUN2": {"DNS": "stun1.prod.capcomfighters.net","Port": "33478"}</li>
-    <li>"Message": {"DNS": "message.prod.capcomfighters.net","Port": "20002"}</li>
-    <li>"File": {"DNS": "fdlcdn.prod.capcomfighters.net","Port": "80"}</li>
-    <li>"Proud": {"DNS": "209.58.132.134","Port": "30850"}</li>
+    <li>two packet capture files taken, total size of 33MB from 9 matches</li>
+    <li>packet lengths in 40-319 range, 90% are in 80-159 range</li>
+    <li>10.75% of packets had to explicitly traverse through NAT, assuming this to be lobby setup and idling</li>
+    <li>while users in lobby, PING/PONG messages periodically sent between lobby members as a keep-alive</li>
   </ul>
-  <li>uses combination of server/client for authentication and peer-to-peer for lobby play</li>
-  <li>while sitting in lobby, dgrams sent back and forth between lobby players with following format:</li>
-  <!-- image of wireshark here -->
-  <li>while sitting in lobby, heatmap in background being periodically updated from fileserver through plaintext HTTP requests</li>
-</ul>
+
+  <p>
+
+  </p>
+  <h4> Video Highlights </h4>
+    The following list of links showcases the notable test matches played.
+  </p>
+    <!-- insert video links here -->
+    <ol>
+      <li><a href="https://www.youtube.com/watch?v=92_V-KW-DW8" target="_blank">223ms, frame delay set to 8 on both sides</a></li>
+      <li><a href="https://www.youtube.com/watch?v=w2IBQg-RInk" target="_blank">243ms, frame_delay set to 0 on both sides</a></li>
+      <li><a href="https://www.youtube.com/watch?v=7fbcgZsshkY" target="_blank">380ms, frame_delay set to 8 on host side.</a>Game saw longer load times and match ending discrepancy</li>
+      <ul>
+        <li><a href="https://www.youtube.com/watch?v=6msDsCVpnbs" target="_blank">Match end discrepancy mentioned above</a></li>
+      </ul>
+      <li><a href="https://www.youtube.com/watch?v=cFtmsgHmNpo" target="_blank">400ms, frame_delay set to 0 on both sides.</a> Lots of frame skipping and sound duplication can be seen.</li>
+      <li><a href="https://www.youtube.com/watch?v=MJy8tZn7qMo" target="_blank">223ms, frame_delay set to 0 on both sides.</a> Packet loss of 20% forced on host end.</li>
+      <li><a href="https://www.youtube.com/watch?v=59EbeD4_ml4" target="_blank">320ms, frame_delay set to 5 on host side.</a> Game is slightly smoother but slow-paced with infrequent input drops.</li>
+    </ol>
+
+  <p>
+    Attempts at matches with more than 20% packet loss were made, but the game would crash either on attempts to load or during the game.
+    Attempts above 400ms also resulted in similar crashes.
+  </p>
+
+
+  <h3> Analysis on Street Fighter V </h3>
+
+  <p>
+    Attempts at analysing Street Fighter V's traffic were not as successful.
+    Information regarding Street Fighter V's server setup were gathered but analysis from the actual matches is unreliable.
+  </p>
+
+  <h4> Assumed Server Architecture </h4>
+  <p>
+    On starting the game, the following server information is sent to the Steam client as a JSON message.
+    <ul>
+      <li>"Game": {"DNS": "api.prod.capcomfighters.net", "Port": "80"}</li>
+      <li>"STUN1": {"DNS": "stun1.prod.capcomfighters.net", "Port": "23478"}</li>
+      <li>"STUN2": {"DNS": "stun1.prod.capcomfighters.net","Port": "33478"}</li>
+      <li>"Message": {"DNS": "message.prod.capcomfighters.net","Port": "20002"}</li>
+      <li>"File": {"DNS": "fdlcdn.prod.capcomfighters.net","Port": "80"}</li>
+      <li>"Proud": {"DNS": "209.58.132.134","Port": "30850"}</li>
+    </ul>
+    Capcom
+  </p>
+
+    <li>uses combination of server/client for authentication and peer-to-peer for lobby play</li>
+    <li>while sitting in lobby, dgrams sent back and forth between lobby players with following format:</li>
+    <!-- image of wireshark here -->
+    <li>while sitting in lobby, heatmap in background being periodically updated from fileserver through plaintext HTTP requests</li>
+  </ul>
+</div><!-- /.game-analysis -->
