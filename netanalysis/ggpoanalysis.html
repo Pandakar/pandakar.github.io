@@ -1,0 +1,131 @@
+---
+layout: default
+title: CSC 466 | Middleware Analysis
+---
+<div class="middleware-analysis">
+  <h2> Architecture and Packet Analysis </h2>
+  <p>
+    This page goes over results and assumptions made from packet captures on Skullgirls and Street Fighter V.
+    Not all of this may be accurate, so where applicable packets will be available.
+  </p>
+
+  <h2> Analysis on GGPO Middleware </h2>
+  <p>
+    GGPO, short for "Good Game, Well Played" is a middleware suite designed with fighting games in mind.
+    It was developed by Tony Cannon, a member of the Shoryuken online fighting community.
+    The functional part of this middleware (where the magic happens) is closed source, but the section of code pertaining to the GUI for its client
+    can be found at <a href="https://github.com/doctorguile/pyqtggpo" target="_blank">this GitHub repository.</a>
+    The GGPO middleware is an attempted solution at providing a smoother online experience for peer-to-peer fighting games.
+    This section goes through two parts:
+    <ol>
+      <li>how the middleware is structured</li>
+      <li>a high level overview on how the middleware operates.</li>
+    </ol>
+  </p>
+  <h3> Structure of GGPO Middleware </h3>
+  <p>
+    This software sits at the network layer behind the desired game.
+    It was not designed for any one game in mind, but instead to allow netplay for a wide variety of fighting action games.
+    Its primary functionality is twofold:
+    <ul>
+      <li>it offers older, emulated games a chance at reliable netplay</li>
+      <li>it lets game participants set a frame delay for matches to try and smooth out gameplay</li>
+    <ul>
+
+    The second point is of more interest here, as this is what middleware like GGPO attempts to use to differentiate itself from regular netplay.
+    Before starting a match, each client can select a frame delay with which they're comfortable using. This delay is selected from a range of 0 to 8 frames.
+    A frame delay of 0 would let the game behave as normal, where the max possible delay of 8 means both clients have any inputs delayed by 8 frames before being processed.
+    From preliminary tests, the middleware selects the higher of the two frame delays. So if one client selects 0 frame delay and the other selects 5 frames of delay, the game proceeds with 5 frames of delay.
+    This means the games are still subject to latency, packet loss and other network issues but the overall experience can still feel smoother than a game just randomly dropping inputs.
+
+    A more concise explanation of how GGPO functions with respect to frame delay can be found from <a href='http://skullgirls.com/2011/09/skullgirls-ggpo-and-you/' target="_blank">this blog post. </a>
+  </p>
+  <p>
+    One very important side effect of using this middleware is that <em> games using this middleware must use a peer-to-peer architecture</em>.
+    You can use any protocol to send packets, but the packets have to be sent and interpreted by each client directly.
+    Games using GGPO cannot use a server/client architecture and any benefits associated with using such an architecture.
+  </p>
+
+   <p>
+    GGPO's primary functionality relies on an archive named "ggpo-build-030.zip" as per the last GitHub update from above.
+    To ensure the middleware functions out-of-the-box, both users need to perform the following tasks:
+    <ul>
+      <li>UDP ports 6000-6009 (inbound/outbound) and TCP port 7000 (outbound) opened in home network</li>
+      <li>Adobe Air installed on machine</li>
+      <li>GGPO account registered if needed, no longer possible with site being down</li>
+    </ul>
+    However, the site they link as a source of the archive, <a href="http://ggpo.net" target="_blank">ggpo.net</a>, has been disabled indefinitely.
+  </p>
+
+  <p>
+    For the purposes of analysis, a copy of the archive was found on a 3rd party rehost.
+    The archive's contents and structure can be seen in the following image.
+  </p>
+
+  <img src="/assets/ggpocontents.png" width="50%">
+
+  <p>
+    As seen at the bottom of the screenshot, this middleware also includes 4 DLLs that hold the majority of its functionality:
+    <ul>
+      <li>ggponet.dll</li>
+      <li>kailleraclient.dll</li>
+      <li>mfc80u.dll </li>
+      <li>msvcr80.dll</li>
+    </ul>
+    The first two DLLs here are of higher interest, as msvcr80.dll and mfc80u.dll both contain typical Windows function calls.
+  </p>
+
+  <h4>Purpose of DLLs in GGPO</h4>
+  <p>
+    These DLLs were created from Visual C++ source code.
+    Because of this, Visual Studio's dumpbin tool was used to dump function information from both <em>ggponet.dll</em> and <em>kailleraclient.dll.</em>
+    The functions found from each can be seen below.
+  </p>
+
+  <p>
+    ggponet.dll:
+    <ul>
+      <li>ggpo_advance_frame</li>
+      <li>ggpo_client_chat</li>
+      <li>ggpo_client_connect</li>
+      <li>ggpo_client_set_game_event</li>
+      <li>ggpo_close_session</li>
+      <li>ggpo_get_stats</li>
+      <li>ggpo_idle</li>
+      <li>ggpo_log</li>
+      <li>ggpo_logv</li>
+      <li>ggpo_set_frame_display</li>
+      <li>ggpo_start_replay</li>
+      <li>ggpo_start_session</li>
+      <li>ggpo_start_streaming</li>
+      <li>ggpo_start_synctest</li>
+      <li>ggpo_synchronize_input</li>
+    </ul>
+  </p>
+
+  <p>
+    kailleraclient.dll:
+    <ul>
+      <li>_kailleraChatSend@4</li>
+      <li>_kailleraEndGame@4</li>
+      <li>_kailleraGetVersion</li>
+      <li>_kailleraInit@4</li>
+      <li>_kailleraModifyPlayValues@8</li>
+      <li>_kailleraSelectServerDialog@4</li>
+      <li>_kailleraSetInfos@4</li>
+      <li>_kailleraShutdown@4</li>
+    </ul>
+  </p>
+
+  <p>
+    From these method names, I made the assumption that kailleraclient.dll is used to handle networking functions between games and the client itself.
+    This would include things like starting up the client, creating and managing lobbies, handling chat between connected peers and initiating games.
+  </p>
+
+  <p>
+    This leaves ggponet.dll as the primary source of our interest, as it would handle all of the in-game networking.
+    Of note is the capabilities to advance frames, synchronize input as per the previously set frame delay,
+    connecting peers properly before and during a game and ensuring the game stays alive for as long as necessary.
+  </p>
+
+</div><!-- /.middleware-analysis -->
