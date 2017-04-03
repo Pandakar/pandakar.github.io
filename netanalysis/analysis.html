@@ -1,0 +1,154 @@
+<div class="analysis">
+  <h2> Architecture and Packet Analysis </h2>
+  <p>
+    This page goes over results and assumptions made from packet captures on Skullgirls and Street Fighter V.
+    Not all of this may be accurate, so where applicable packets will be available.
+  </p>
+
+  <h2> Analysis on GGPO Middleware </h2>
+  <p>
+    The GGPO middleware is an attempted solution at providing a smoother online experience for peer-to-peer fighting games.
+    This section goes over two parts: how the middleware is structured and analysis of its decompiled DLLs.
+  </p>
+  <h4> Structure of GGPO Middleware </h4>
+  <ul>
+    <li> Middleware sits at the network layer </li>
+     <ul>
+       <li> Previously linked GitHub repository (<a href=""> here</a>) only has code pertaining to GUI </li>
+       <li> Middleware functionality relies on the "ggpo-build-030.zip" file originally availble off ggpo.net</li>
+       <li> At time of writing, build was unavailable due to site revamp - had to grab from a 3rd party file rehost </li>
+     </ul>
+     <li> Contents of middleware's build archive</li>
+     <!-- put image here of file tree -->
+     <li> Middleware relies primarily on 4 DLLs for its functionality:</li>
+     <ul>
+       <li>ggponet.dll</li>
+       <li>kailleraclient.dll</li>
+       <li>mfc80u.dll </li>
+       <li>msvcr80.dll</li>
+     </ul>
+     <li>Other dependencies and requirements for middleware to function out-of-the-box:</li>
+     <ul>
+       <li>UDP ports 6000-6009 (inbound/outbound) and TCP port 7000 (outbound) opened in home network</li>
+       <li>Adobe Air installed on machine</li>
+       <li>GGPO account registered if needed, no longer possible with site being down</li>
+     </ul>
+  </ul>
+  <h4>Purpose of DLLs in GGPO</h4>
+  <ul>
+    <li>DLLs written in Visual C++ [2005] - can use Visual Studio's dumpbin tool to dump information from them</li>
+    <li>ggponet.dll</li>
+    <ul>
+      <li>ggpo_advance_frame</li>
+      <li>ggpo_client_chat</li>
+      <li>ggpo_client_connect</li>
+      <li>ggpo_client_set_game_event</li>
+      <li>ggpo_close_session</li>
+      <li>ggpo_get_stats</li>
+      <li>ggpo_idle</li>
+      <li>ggpo_log</li>
+      <li>ggpo_logv</li>
+      <li>ggpo_set_frame_display</li>
+      <li>ggpo_start_replay</li>
+      <li>ggpo_start_session</li>
+      <li>ggpo_start_streaming</li>
+      <li>ggpo_start_synctest</li>
+      <li>ggpo_synchronize_input</li>
+    </ul>
+    <li>kailleraclient.dll</li>
+    <ul>
+      <li>_kailleraChatSend@4</li>
+      <li>_kailleraEndGame@4</li>
+      <li>_kailleraGetVersion</li>
+      <li>_kailleraInit@4</li>
+      <li>_kailleraModifyPlayValues@8</li>
+      <li>_kailleraSelectServerDialog@4</li>
+      <li>_kailleraSetInfos@4</li>
+      <li>_kailleraShutdown@4</li>
+    </ul>
+    <li>mfc80u.dll</li>
+    <ul>
+      <li>Nothing of particular interest, most likely system libraries</li>
+    </ul>
+    <li>msvcr80.dll</li>
+    <ul>
+      <li>System library calls</li>
+    </ul>
+  </ul>
+  <p>
+    Our two main DLLs of interest here seem to be ggponet.dll and kailleraclient.dll.
+    From these method names kailleraclient.dll can be assumed to handle pre-game setup.
+    ggponet.dll contains the functionality we're interested in - it handles frame advancement and synchronization between clients.
+  </p>
+
+  <ul>
+    <li>main functionality of GGPO is that the clients agree on an acceptable number of frames to delay game by</li>
+    <ul>
+      <li>this can be in range of 0 to 8, both clients set the amount of frames they are okay with delaying game by</li>
+      <li>setting of 0 on both sides means game plays as if GGPO wasn't enabled - regular gameplay</li>
+    </ul>
+    <li>before proceeding to the match, GGPO checks to see which client had higher frame delay setting and uses that</li>
+    <ul>
+      <li>i.e. if one client sets frame delay to 0 and one sets it to 8, game proceeds with the 8 setting</li>
+    </ul>
+    <li>constraints of GGPO force games to be conducted directly between peers - games can't use server/client model if using GGPO</li>
+    <li>once game is started, inputs start being sampled between players and delayed by GGPO as necessary</li>
+    <ul>
+      <li>if player A puts an input in on frame 1 with GGPO enabled and set to a delay of 5, the game will look as if the input was on frame 6</li>
+    </ul>
+  </ul>
+
+  <h4>Using Clumsy to Force Unfavorable Latency</h4>
+
+  <p>
+    Clumsy is an open-source tool that uses the WinDivert library to interact with packets.
+    Clumsy can be found <a href="https://jagt.github.io/clumsy/"> here </a>.
+    Amongst other features, this software can perform the following functions on Windows systems:
+    <ul>
+      <li>forcing lag</li>
+      <li>dropping packets</li>
+      <li>throttling connections</li>
+      <li>duplicating packets</li>
+      <li>sending packets out-of-order</li>
+      <li>tampering with checksums</li>
+    </ul>
+    To force additional latency and controlled packet loss during gameplay, Clumsy was used.
+  </p>
+
+  <h4> Analysis on Skullgirls </h4>
+
+  <ul>
+    <li>solely uses peer-to-peer for online play</li>
+    <li>uses GGPO to assist in netplay</li>
+    <li>in lobbies with repeated matches, host of match is alternated</li>
+    <li>Tests were conducted with a peer in Australia to see how much stress GGPO could handle</li>
+    <li>Tests with notable results:</li>
+    <!-- insert video links here -->
+    <ol>
+      <li>[223ms, frame_delay=8,8; game felt "smooth"](https://www.youtube.com)</li>
+      <li>243ms, frame_delay=0,0; longer load times</li>
+      <li>380ms, frame_delay=8,0; longer load times and match ending sound is duplicated at end</li>
+      <li>400ms, frame_delay=0,0; lots of frame skipping</li>
+      <li>223ms, frame_delay=0,0; packet loss of 20% forced on my end, result is "my" character being unresponsive</li>
+      <li>320ms, frame_delay=5,0; game is smoother but slow-paced with infrequent input drops </li>
+    </ol>
+  </ul>
+
+  <h4> Analysis on Street Fighter V </h4>
+
+  <ul>
+    <li>on startup, following servers sent to Steam client as JSON message</li>
+    <ul>
+      <li>"Game": {"DNS": "api.prod.capcomfighters.net", "Port": "80"}</li>
+      <li>"STUN1": {"DNS": "stun1.prod.capcomfighters.net", "Port": "23478"}</li>
+      <li>"STUN2": {"DNS": "stun1.prod.capcomfighters.net","Port": "33478"}</li>
+      <li>"Message": {"DNS": "message.prod.capcomfighters.net","Port": "20002"}</li>
+      <li>"File": {"DNS": "fdlcdn.prod.capcomfighters.net","Port": "80"}</li>
+      <li>"Proud": {"DNS": "209.58.132.134","Port": "30850"}</li>
+    </ul>
+    <li>uses combination of server/client for authentication and peer-to-peer for lobby play</li>
+    <li>while sitting in lobby, dgrams sent back and forth between lobby players with following format:</li>
+    <!-- image of wireshark here -->
+    <li>while sitting in lobby, heatmap in background being periodically updated from fileserver through plaintext HTTP requests</li>
+  </ul>
+</div><!-- /.analysis -->
